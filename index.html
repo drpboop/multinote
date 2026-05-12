@@ -124,7 +124,6 @@ button:hover { background:#666; }
 
 <div class="container">
 
-<!-- INTERNAL ONLY -->
 <label>caller name:</label>
 <input id="callerName">
 
@@ -137,63 +136,22 @@ button:hover { background:#666; }
 <!-- TASKS -->
 <label>tasks:</label>
 
-<!-- Core tasks -->
-<div class="row">
-  <input type="checkbox" id="t1" onchange="toggleTaskNote(1)">
-  <label for="t1">checked cost and coverage for medication</label>
-</div>
-<input id="n1" class="subnote" placeholder="optional details">
+<!-- TASK LIST -->
+<script>
+const TASKS = [
+  { id: 1, label: "cost estimator", text: "checked cost and coverage for medication" },
+  { id: 2, label: "view benefits", text: "checked benefit coverage for mbr" },
+  { id: 3, label: "manage claims", text: "checked claims // located rx" },
+  { id: 4, label: "request summary", text: "check prior authorization status for rx" },
+  { id: 5, label: "sending forms", text: "faxed forms to prov office // advised of turn around time per j/a" },
+  { id: 6, label: "prime resolution", text: "checked/created case for mbr" },
+  { id: 7, label: "locate pharm", text: "locate in network pharm" },
+  { id: 8, label: "accumulators", text: "reviewed mbr current accumulator totals" }
+];
+</script>
 
-<div class="row">
-  <input type="checkbox" id="t2" onchange="toggleTaskNote(2)">
-  <label for="t2">checked benefit coverage for mbr</label>
-</div>
-<input id="n2" class="subnote" placeholder="optional details">
+<div id="taskContainer"></div>
 
-<div class="row">
-  <input type="checkbox" id="t3" onchange="toggleTaskNote(3)">
-  <label for="t3">checked claims // located rx</label>
-</div>
-<input id="n3" class="subnote" placeholder="optional details">
-
-<div class="row">
-  <input type="checkbox" id="t4" onchange="toggleTaskNote(4)">
-  <label for="t4">check prior authorization status for rx</label>
-</div>
-<input id="n4" class="subnote" placeholder="optional details">
-
-<div class="row">
-  <input type="checkbox" id="t5" onchange="toggleTaskNote(5)">
-  <label for="t5">faxed forms to prov office</label>
-</div>
-<input id="n5" class="subnote" placeholder="optional details">
-
-<!-- Former RES options now tasks -->
-<div class="row">
-  <input type="checkbox" id="t6" onchange="toggleTaskNote(6)">
-  <label for="t6">check/apply override per psa j/a</label>
-</div>
-<input id="n6" class="subnote" placeholder="optional details">
-
-<div class="row">
-  <input type="checkbox" id="t7" onchange="toggleTaskNote(7)">
-  <label for="t7">review/resolve claim reject</label>
-</div>
-<input id="n7" class="subnote" placeholder="optional details">
-
-<div class="row">
-  <input type="checkbox" id="t8" onchange="toggleTaskNote(8)">
-  <label for="t8">verify costshare details via benefits</label>
-</div>
-<input id="n8" class="subnote" placeholder="optional details">
-
-<div class="row">
-  <input type="checkbox" id="t9" onchange="toggleTaskNote(9)">
-  <label for="t9">confirm coverage</label>
-</div>
-<input id="n9" class="subnote" placeholder="optional details">
-
-<!-- RES NOTES ONLY -->
 <label>res:</label>
 <textarea id="resNotes" placeholder="resolution details"></textarea>
 
@@ -204,21 +162,34 @@ button:hover { background:#666; }
 
 </div>
 
-<!-- OUTPUT -->
+<!-- OUTPUT MODAL -->
 <div class="modal" id="noteModal">
   <div class="modal-content">
     <span class="close" onclick="noteModal.style.display='none'">&times;</span>
     <textarea id="output" readonly></textarea>
     <div class="button-row">
-      <button onclick="output.select();document.execCommand('copy')">copy</button>
+      <button onclick="copyNote()">copy</button>
+      <button onclick="location.reload()">finish</button>
     </div>
   </div>
 </div>
 
 <script>
-function toggleTaskNote(num) {
-  const cb = document.getElementById('t' + num);
-  const note = document.getElementById('n' + num);
+const taskContainer = document.getElementById('taskContainer');
+
+TASKS.forEach(t => {
+  taskContainer.insertAdjacentHTML('beforeend', `
+    <div class="row">
+      <input type="checkbox" id="t${t.id}" onchange="toggleTask(${t.id})">
+      <label for="t${t.id}">${t.label}</label>
+    </div>
+    <input id="n${t.id}" class="subnote" placeholder="optional details">
+  `);
+});
+
+function toggleTask(id) {
+  const cb = document.getElementById('t' + id);
+  const note = document.getElementById('n' + id);
   note.style.display = cb.checked ? 'block' : 'none';
   if (!cb.checked) note.value = '';
 }
@@ -232,23 +203,12 @@ function generateNote() {
   if (rx.value.trim())
     lines.push(`rx: ${rx.value.trim()} //`);
 
-  const tasks = [
-    ['t1','n1','checked cost and coverage for medication'],
-    ['t2','n2','checked benefit coverage for mbr'],
-    ['t3','n3','checked claims // located rx'],
-    ['t4','n4','check prior authorization status for rx'],
-    ['t5','n5','faxed forms to prov office'],
-    ['t6','n6','check/apply override per psa j/a'],
-    ['t7','n7','review/resolve claim reject'],
-    ['t8','n8','verify costshare details via benefits'],
-    ['t9','n9','confirm coverage']
-  ];
-
   const taskLines = [];
-  tasks.forEach(t => {
-    if (document.getElementById(t[0]).checked) {
-      const extra = document.getElementById(t[1]).value.trim();
-      taskLines.push(`${t[2]}${extra ? ' // ' + extra : ''} //`);
+  TASKS.forEach(t => {
+    const cb = document.getElementById('t' + t.id);
+    if (cb.checked) {
+      const extra = document.getElementById('n' + t.id).value.trim();
+      taskLines.push(`${t.text}${extra ? ' // ' + extra : ''} //`);
     }
   });
 
@@ -262,6 +222,11 @@ function generateNote() {
 
   output.value = lines.join('\n');
   noteModal.style.display = 'block';
+}
+
+function copyNote() {
+  output.select();
+  document.execCommand('copy');
 }
 </script>
 
