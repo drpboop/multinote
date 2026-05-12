@@ -1,188 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>regular agent call note</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>regular agent call note</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
-
-    body {
-      background:#000;
-      color:#fff;
-      font-family:'Century Gothic',sans-serif;
-      padding:20px;
-      margin:0;
-    }
-
-    .container {
-      background:#111;
-      padding:20px;
-      border-radius:10px;
-      max-width:500px;
-      margin:0 auto 20px;
-      box-shadow:0 0 10px rgba(255,255,255,.2);
-    }
-
-    label,input,select,textarea {
-      width:100%;
-      display:block;
-      margin-bottom:10px;
-      background:#222;
-      color:#fff;
-      border:none;
-      padding:8px;
-      border-radius:5px;
-      font-family:'Century Gothic',sans-serif;
-      box-sizing:border-box;
-    }
-
-    label { background:none;padding:0;margin-bottom:4px; }
-
-    textarea { resize:vertical;min-height:60px; }
-
-    .item {
-      display:flex;
-      align-items:center;
-      gap:6px;
-      margin-bottom:4px;
-    }
-
-    .item input[type=checkbox] { width:auto; }
-
-    .subnote { margin-left:22px;margin-bottom:8px; }
-
-    .button-row {
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    button {
-      background:#444;
-      color:#fff;
-      border:none;
-      padding:10px 15px;
-      border-radius:5px;
-      cursor:pointer;
-    }
-
-    button:hover { background:#666; }
-
-    .modal {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.8);
-    }
-
-    .modal-content {
-      background:#111;
-      margin:15% auto;
-      padding:20px;
-      max-width:500px;
-      border-radius:10px;
-    }
-
-    textarea#output {
-      height:200px;
-      resize:none;
-      background:#222;
-    }
-
-    .close {
-      float:right;
-      font-size:28px;
-      cursor:pointer;
-      color:#aaa;
-    }
-
-    .close:hover { color:#fff; }
-  </style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
+body{background:#000;color:#fff;font-family:'Century Gothic',sans-serif;padding:20px;margin:0}
+.container{background:#111;padding:20px;border-radius:10px;max-width:500px;margin:0 auto 20px;box-shadow:0 0 10px rgba(255,255,255,.2)}
+label,input,select,textarea{width:100%;display:block;margin-bottom:8px;background:#222;color:#fff;border:none;padding:8px;border-radius:5px;font-family:'Century Gothic'}
+label{background:none;padding:0}
+textarea{resize:vertical;min-height:60px}
+.item{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.item input{width:auto}
+.subnote{margin-left:22px;margin-bottom:10px}
+.button-row{display:flex;justify-content:center;gap:10px;margin-top:10px}
+button{background:#444;color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer}
+button:hover{background:#666}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8)}
+.modal-content{background:#111;margin:15% auto;padding:20px;max-width:500px;border-radius:10px}
+#output{height:220px;resize:none;background:#222}
+.close{float:right;font-size:28px;color:#aaa;cursor:pointer}
+.close:hover{color:#fff}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <label>caller name:</label>
-  <input id="callerName">
+<label>caller name:</label>
+<input id="callerName">
 
-  <label>xfer:</label>
-  <select id="xferFlag" onchange="toggleXfer()">
-    <option value="no">no</option>
-    <option value="yes">yes</option>
-  </select>
+<label>caller type:</label>
+<select id="type">
+  <option value="">-- select --</option>
+  <option>member</option>
+  <option>parent of minor</option>
+  <option>spouse</option>
+  <option>provider</option>
+  <option>pharmacy</option>
+  <option>plan</option>
+  <option>third party</option>
+  <option>cms test caller</option>
+  <option>alexa (ai)</option>
+</select>
 
-  <div id="xferBox" style="display:none">
-    <label>xfer from:</label>
-    <select id="xferFrom">
-      <option value="">-- select --</option>
-      <option>internal agt</option>
-      <option>plan</option>
-      <option>supervisor</option>
-      <option>other</option>
-    </select>
+<label>reason for call:</label>
+<input id="reason">
 
-    <label>xfered caller name:</label>
-    <input id="xferedCaller">
-  </div>
+<label>rx:</label>
+<input id="rx">
 
-  <label>caller type:</label>
-  <select id="type">
-    <option value="">-- select --</option>
-    <option>alexa (ai)</option>
-    <option>cms test caller</option>
-    <option>member</option>
-    <option>parent of minor</option>
-    <option>pharmacy</option>
-    <option>plan</option>
-    <option>provider</option>
-    <option>spouse</option>
-    <option>third party</option>
-  </select>
+<!-- TASKS -->
+<label>tasks:</label>
 
-  <label>reason for call:</label>
-  <input id="reason">
+<div class="item"><input type="checkbox" id="t1"><label for="t1">checked cost and coverage for medication</label></div>
+<input class="subnote" id="n1" placeholder="optional details">
 
-  <label>rx:</label>
-  <input id="rx">
+<div class="item"><input type="checkbox" id="t2"><label for="t2">checked benefit coverage for mbr</label></div>
+<input class="subnote" id="n2" placeholder="optional details">
 
-  <!-- TASKS -->
-  <label>task(s):</label>
+<div class="item"><input type="checkbox" id="t3"><label for="t3">checked claims // located rx</label></div>
+<input class="subnote" id="n3" placeholder="optional details">
 
-  <div class="item"><input type="checkbox" id="t1"><label for="t1">checked cost and coverage for medication</label></div>
-  <input class="subnote" id="n1" placeholder="optional details">
+<div class="item"><input type="checkbox" id="t4"><label for="t4">check prior authorization status for rx</label></div>
+<input class="subnote" id="n4" placeholder="optional details">
 
-  <div class="item"><input type="checkbox" id="t2"><label for="t2">checked benefit coverage for mbr</label></div>
-  <input class="subnote" id="n2" placeholder="optional details">
+<div class="item"><input type="checkbox" id="t5"><label for="t5">faxed forms to prov office</label></div>
+<input class="subnote" id="n5" placeholder="optional details">
 
-  <div class="item"><input type="checkbox" id="t3"><label for="t3">checked claims // located rx</label></div>
-  <input class="subnote" id="n3" placeholder="optional details">
+<!-- RESOLUTION -->
+<label>res:</label>
 
-  <div class="item"><input type="checkbox" id="t4"><label for="t4">check prior authorization status for rx</label></div>
-  <input class="subnote" id="n4" placeholder="optional details">
+<div class="item"><input type="radio" name="res" value="check/apply override per psa j/a"></div>
+<div class="item"><input type="radio" name="res" value="check eligibility"></div>
+<div class="item"><input type="radio" name="res" value="check pharm network"></div>
+<div class="item"><input type="radio" name="res" value="check quantity limits"></div>
+<div class="item"><input type="radio" name="res" value="confirm coverage"></div>
+<div class="item"><input type="radio" name="res" value="create pr case per j/a"></div>
+<div class="item"><input type="radio" name="res" value="escalation/xfer caller"></div>
+<div class="item"><input type="radio" name="res" value="explore alternative medication options"></div>
+<div class="item"><input type="radio" name="res" value="inform of formulary exception/coverage exception"></div>
+<div class="item"><input type="radio" name="res" value="initiate/fax forms for prior authorization"></div>
+<div class="item"><input type="radio" name="res" value="review prior authorization status"></div>
+<div class="item"><input type="radio" name="res" value="reach out to clinical regarding prior authorization"></div>
+<div class="item"><input type="radio" name="res" value="review accumulators"></div>
+<div class="item"><input type="radio" name="res" value="review/resolve claim reject"></div>
+<div class="item"><input type="radio" name="res" value="verify costshare details via benefits"></div>
 
-  <div class="item"><input type="checkbox" id="t5"><label for="t5">faxed forms to prov office</label></div>
-  <input class="subnote" id="n5" placeholder="optional details">
+<textarea id="resNotes" placeholder="additional resolution notes"></textarea>
 
-  <!-- RESOLUTIONS -->
-  <label>res(s):</label>
-
-  <div class="item"><input type="checkbox" id="r1"><label for="r1">check/apply override per psa j/a</label></div>
-  <div class="item"><input type="checkbox" id="r2"><label for="r2">check eligibility</label></div>
-  <div class="item"><input type="checkbox" id="r3"><label for="r3">check pharm network</label></div>
-  <div class="item"><input type="checkbox" id="r4"><label for="r4">confirm coverage</label></div>
-  <div class="item"><input type="checkbox" id="r5"><label for="r5">escalation/xfer caller</label></div>
-
-  <textarea id="resNotes" placeholder="resolution notes"></textarea>
-
-  <div class="button-row">
-    <button onclick="generateNote()">submit</button>
-    <button onclick="location.reload()">cancel</button>
-  </div>
+<div class="button-row">
+  <button onclick="generateNote()">submit</button>
+  <button onclick="location.reload()">cancel</button>
+</div>
 </div>
 
 <div class="modal" id="noteModal">
@@ -190,25 +103,18 @@
     <span class="close" onclick="noteModal.style.display='none'">&times;</span>
     <textarea id="output" readonly></textarea>
     <div class="button-row">
-      <button onclick="copyNote()">copy</button>
-      <button onclick="location.reload()">reset</button>
+      <button onclick="output.select();document.execCommand('copy')">copy</button>
     </div>
   </div>
 </div>
 
 <script>
-function toggleXfer(){
-  xferBox.style.display = xferFlag.value==='yes'?'block':'none';
-}
-
 function generateNote(){
   const lines=[];
 
-  if(xferFlag.value==='yes' && xferFrom.value) lines.push(`xfer from: ${xferFrom.value}`);
-  if(xferFlag.value==='yes' && xferedCaller.value.trim()) lines.push(`xfered caller name: ${xferedCaller.value.trim()}`);
-  if(type.value) lines.push(`caller type: ${type.value}`);
-  if(reason.value.trim()) lines.push(`reason for call: ${reason.value.trim()}`);
-  if(rx.value.trim()) lines.push(`rx: ${rx.value.trim()}`);
+  if(type.value)lines.push(`caller type: ${type.value} //`);
+  if(reason.value.trim())lines.push(`reason for call: ${reason.value.trim()} //`);
+  if(rx.value.trim())lines.push(`rx: ${rx.value.trim()} //`);
 
   const tasks=[
     ['t1','n1','checked cost and coverage for medication'],
@@ -222,26 +128,22 @@ function generateNote(){
   tasks.forEach(t=>{
     if(document.getElementById(t[0]).checked){
       const extra=document.getElementById(t[1]).value.trim();
-      taskLines.push(t[2]+(extra?` // ${extra}`:''));
+      taskLines.push(`${t[2]}${extra?' // '+extra:''} //`);
     }
   });
-  if(taskLines.length) lines.push(`task(s) //\n${taskLines.join(' //\n')}`);
+  if(taskLines.length){
+    lines.push(`tasks:\n${taskLines.join('\n')}`);
+  }
 
-  const res=[];
-  ['r1','r2','r3','r4','r5'].forEach(id=>{
-    if(document.getElementById(id).checked)
-      res.push(document.querySelector(`label[for=${id}]`).innerText);
-  });
-  if(res.length) lines.push(`res(s) //\n${res.join(' //\n')}`);
-  if(resNotes.value.trim()) lines.push(`res: ${resNotes.value.trim()}`);
+  const selRes=document.querySelector('input[name="res"]:checked');
+  if(selRes){
+    let resLine=`res: ${selRes.value}`;
+    if(resNotes.value.trim())resLine+=` / ${resNotes.value.trim()}`;
+    lines.push(resLine);
+  }
 
-  output.value = lines.join(' //\n');
+  output.value=lines.join('\n');
   noteModal.style.display='block';
-}
-
-function copyNote(){
-  output.select();
-  document.execCommand('copy');
 }
 </script>
 
