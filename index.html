@@ -7,31 +7,114 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
-body{background:#000;color:#fff;font-family:'Century Gothic',sans-serif;padding:20px;margin:0}
-.container{background:#111;padding:20px;border-radius:10px;max-width:500px;margin:0 auto 20px;box-shadow:0 0 10px rgba(255,255,255,.2)}
-label,input,select,textarea{width:100%;display:block;margin-bottom:8px;background:#222;color:#fff;border:none;padding:8px;border-radius:5px;font-family:'Century Gothic'}
-label{background:none;padding:0}
-textarea{resize:vertical;min-height:60px}
-.item{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.item input{width:auto}
-.subnote{margin-left:22px;margin-bottom:10px}
-.button-row{display:flex;justify-content:center;gap:10px;margin-top:10px}
-button{background:#444;color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer}
-button:hover{background:#666}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8)}
-.modal-content{background:#111;margin:15% auto;padding:20px;max-width:500px;border-radius:10px}
-#output{height:220px;resize:none;background:#222}
-.close{float:right;font-size:28px;color:#aaa;cursor:pointer}
-.close:hover{color:#fff}
+
+body {
+  background:#000;
+  color:#fff;
+  font-family:'Century Gothic',sans-serif;
+  padding:20px;
+  margin:0;
+}
+
+.container {
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  max-width:520px;
+  margin:0 auto 20px;
+  box-shadow:0 0 10px rgba(255,255,255,.2);
+}
+
+label {
+  display:block;
+  margin:6px 0 4px;
+}
+
+input, select, textarea {
+  width:100%;
+  background:#222;
+  color:#fff;
+  border:none;
+  padding:8px;
+  border-radius:5px;
+  font-family:'Century Gothic',sans-serif;
+  box-sizing:border-box;
+}
+
+textarea {
+  min-height:60px;
+  resize:vertical;
+}
+
+/* checkbox rows */
+.row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:4px 0;
+}
+
+.row input[type=checkbox] {
+  width:auto;
+}
+
+.subnote {
+  margin-left:26px;
+  margin-bottom:8px;
+}
+
+.button-row {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:12px;
+}
+
+button {
+  background:#444;
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+button:hover { background:#666; }
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+}
+
+.modal-content {
+  background:#111;
+  margin:15% auto;
+  padding:20px;
+  max-width:520px;
+  border-radius:10px;
+}
+
+#output {
+  height:240px;
+  resize:none;
+}
+
+.close {
+  float:right;
+  font-size:28px;
+  cursor:pointer;
+  color:#aaa;
+}
+
+.close:hover { color:#fff; }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-
-<label>caller name:</label>
-<input id="callerName">
 
 <label>caller type:</label>
 <select id="type">
@@ -56,46 +139,47 @@ button:hover{background:#666}
 <!-- TASKS -->
 <label>tasks:</label>
 
-<div class="item"><input type="checkbox" id="t1"><label for="t1">checked cost and coverage for medication</label></div>
-<input class="subnote" id="n1" placeholder="optional details">
+<div class="row"><input type="checkbox" id="t1"><label for="t1">checked cost and coverage for medication</label></div>
+<input id="n1" class="subnote" placeholder="optional details">
 
-<div class="item"><input type="checkbox" id="t2"><label for="t2">checked benefit coverage for mbr</label></div>
-<input class="subnote" id="n2" placeholder="optional details">
+<div class="row"><input type="checkbox" id="t2"><label for="t2">checked benefit coverage for mbr</label></div>
+<input id="n2" class="subnote" placeholder="optional details">
 
-<div class="item"><input type="checkbox" id="t3"><label for="t3">checked claims // located rx</label></div>
-<input class="subnote" id="n3" placeholder="optional details">
+<div class="row"><input type="checkbox" id="t3"><label for="t3">checked claims // located rx</label></div>
+<input id="n3" class="subnote" placeholder="optional details">
 
-<div class="item"><input type="checkbox" id="t4"><label for="t4">check prior authorization status for rx</label></div>
-<input class="subnote" id="n4" placeholder="optional details">
+<div class="row"><input type="checkbox" id="t4"><label for="t4">check prior authorization status for rx</label></div>
+<input id="n4" class="subnote" placeholder="optional details">
 
-<div class="item"><input type="checkbox" id="t5"><label for="t5">faxed forms to prov office</label></div>
-<input class="subnote" id="n5" placeholder="optional details">
+<div class="row"><input type="checkbox" id="t5"><label for="t5">faxed forms to prov office</label></div>
+<input id="n5" class="subnote" placeholder="optional details">
 
-<!-- RESOLUTION -->
+<!-- RES -->
 <label>res:</label>
 
-<div class="item"><input type="radio" name="res" value="check/apply override per psa j/a"></div>
-<div class="item"><input type="radio" name="res" value="check eligibility"></div>
-<div class="item"><input type="radio" name="res" value="check pharm network"></div>
-<div class="item"><input type="radio" name="res" value="check quantity limits"></div>
-<div class="item"><input type="radio" name="res" value="confirm coverage"></div>
-<div class="item"><input type="radio" name="res" value="create pr case per j/a"></div>
-<div class="item"><input type="radio" name="res" value="escalation/xfer caller"></div>
-<div class="item"><input type="radio" name="res" value="explore alternative medication options"></div>
-<div class="item"><input type="radio" name="res" value="inform of formulary exception/coverage exception"></div>
-<div class="item"><input type="radio" name="res" value="initiate/fax forms for prior authorization"></div>
-<div class="item"><input type="radio" name="res" value="review prior authorization status"></div>
-<div class="item"><input type="radio" name="res" value="reach out to clinical regarding prior authorization"></div>
-<div class="item"><input type="radio" name="res" value="review accumulators"></div>
-<div class="item"><input type="radio" name="res" value="review/resolve claim reject"></div>
-<div class="item"><input type="radio" name="res" value="verify costshare details via benefits"></div>
+<div class="row"><input type="checkbox" class="res" value="check/apply override per psa j/a"></div>
+<div class="row"><input type="checkbox" class="res" value="check eligibility"></div>
+<div class="row"><input type="checkbox" class="res" value="check pharm network"></div>
+<div class="row"><input type="checkbox" class="res" value="check quantity limits"></div>
+<div class="row"><input type="checkbox" class="res" value="confirm coverage"></div>
+<div class="row"><input type="checkbox" class="res" value="create pr case per j/a"></div>
+<div class="row"><input type="checkbox" class="res" value="escalation/xfer caller"></div>
+<div class="row"><input type="checkbox" class="res" value="explore alternative medication options"></div>
+<div class="row"><input type="checkbox" class="res" value="inform of formulary exception/coverage exception"></div>
+<div class="row"><input type="checkbox" class="res" value="initiate/fax forms for prior authorization"></div>
+<div class="row"><input type="checkbox" class="res" value="review prior authorization status"></div>
+<div class="row"><input type="checkbox" class="res" value="reach out to clinical regarding prior authorization"></div>
+<div class="row"><input type="checkbox" class="res" value="review accumulators"></div>
+<div class="row"><input type="checkbox" class="res" value="review/resolve claim reject"></div>
+<div class="row"><input type="checkbox" class="res" value="verify costshare details via benefits"></div>
 
-<textarea id="resNotes" placeholder="additional resolution notes"></textarea>
+<textarea id="resNotes" placeholder="resolution notes"></textarea>
 
 <div class="button-row">
   <button onclick="generateNote()">submit</button>
   <button onclick="location.reload()">cancel</button>
 </div>
+
 </div>
 
 <div class="modal" id="noteModal">
@@ -112,9 +196,9 @@ button:hover{background:#666}
 function generateNote(){
   const lines=[];
 
-  if(type.value)lines.push(`caller type: ${type.value} //`);
-  if(reason.value.trim())lines.push(`reason for call: ${reason.value.trim()} //`);
-  if(rx.value.trim())lines.push(`rx: ${rx.value.trim()} //`);
+  if(type.value) lines.push(`caller type: ${type.value} //`);
+  if(reason.value.trim()) lines.push(`reason for call: ${reason.value.trim()} //`);
+  if(rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
 
   const tasks=[
     ['t1','n1','checked cost and coverage for medication'],
@@ -128,21 +212,26 @@ function generateNote(){
   tasks.forEach(t=>{
     if(document.getElementById(t[0]).checked){
       const extra=document.getElementById(t[1]).value.trim();
-      taskLines.push(`${t[2]}${extra?' // '+extra:''} //`);
+      taskLines.push(`${t[2]}${extra ? ' // ' + extra : ''} //`);
     }
   });
+
   if(taskLines.length){
     lines.push(`tasks:\n${taskLines.join('\n')}`);
   }
 
-  const selRes=document.querySelector('input[name="res"]:checked');
-  if(selRes){
-    let resLine=`res: ${selRes.value}`;
-    if(resNotes.value.trim())resLine+=` / ${resNotes.value.trim()}`;
-    lines.push(resLine);
+  const resLines=[];
+  document.querySelectorAll('.res:checked').forEach(r=>{
+    resLines.push(`${r.value} //`);
+  });
+
+  if(resLines.length){
+    lines.push(`res:\n${resLines.join('\n')}`);
+    if(resNotes.value.trim())
+      lines.push(`res note: ${resNotes.value.trim()}`);
   }
 
-  output.value=lines.join('\n');
+  output.value = lines.join('\n');
   noteModal.style.display='block';
 }
 </script>
