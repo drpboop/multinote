@@ -16,7 +16,6 @@ body {
   padding:20px;
 }
 
-/* main form container */
 .container {
   background:#111;
   padding:20px;
@@ -26,7 +25,6 @@ body {
   box-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
-/* standard inputs */
 label {
   display:block;
   margin:8px 0 4px;
@@ -48,12 +46,12 @@ textarea {
   resize:vertical;
 }
 
-/* checkbox rows — unified alignment */
+/* checkbox row alignment */
 .row {
   display:grid;
-  grid-template-columns: 22px 1fr;
-  align-items:center;
+  grid-template-columns:22px 1fr;
   column-gap:8px;
+  align-items:center;
   margin:4px 0;
 }
 
@@ -63,13 +61,14 @@ textarea {
   cursor:pointer;
 }
 
-/* optional per-item notes */
+/* optional details – hidden by default */
 .subnote {
-  margin-left:30px;
+  display:none;
+  margin-left:calc(22px + 8px);
+  width:calc(100% - (22px + 8px));
   margin-bottom:8px;
 }
 
-/* buttons */
 .button-row {
   display:flex;
   justify-content:center;
@@ -88,7 +87,6 @@ button {
 
 button:hover { background:#666; }
 
-/* modal */
 .modal {
   display:none;
   position:fixed;
@@ -105,7 +103,6 @@ button:hover { background:#666; }
 }
 
 #output {
-  width:100%;
   height:240px;
   resize:none;
 }
@@ -149,31 +146,31 @@ button:hover { background:#666; }
 <label>tasks:</label>
 
 <div class="row">
-  <input type="checkbox" id="t1">
+  <input type="checkbox" id="t1" onchange="toggleTaskNote(1)">
   <label for="t1">checked cost and coverage for medication</label>
 </div>
 <input id="n1" class="subnote" placeholder="optional details">
 
 <div class="row">
-  <input type="checkbox" id="t2">
+  <input type="checkbox" id="t2" onchange="toggleTaskNote(2)">
   <label for="t2">checked benefit coverage for mbr</label>
 </div>
 <input id="n2" class="subnote" placeholder="optional details">
 
 <div class="row">
-  <input type="checkbox" id="t3">
+  <input type="checkbox" id="t3" onchange="toggleTaskNote(3)">
   <label for="t3">checked claims // located rx</label>
 </div>
 <input id="n3" class="subnote" placeholder="optional details">
 
 <div class="row">
-  <input type="checkbox" id="t4">
+  <input type="checkbox" id="t4" onchange="toggleTaskNote(4)">
   <label for="t4">check prior authorization status for rx</label>
 </div>
 <input id="n4" class="subnote" placeholder="optional details">
 
 <div class="row">
-  <input type="checkbox" id="t5">
+  <input type="checkbox" id="t5" onchange="toggleTaskNote(5)">
   <label for="t5">faxed forms to prov office</label>
 </div>
 <input id="n5" class="subnote" placeholder="optional details">
@@ -218,6 +215,13 @@ button:hover { background:#666; }
 </div>
 
 <script>
+function toggleTaskNote(num) {
+  const cb = document.getElementById('t' + num);
+  const note = document.getElementById('n' + num);
+  note.style.display = cb.checked ? 'block' : 'none';
+  if (!cb.checked) note.value = '';
+}
+
 function generateNote() {
   const lines = [];
 
@@ -252,9 +256,7 @@ function generateNote() {
 
   if (resLines.length) {
     let resBlock = `res:\n${resLines.join('\n')}`;
-    if (resNotes.value.trim()) {
-      resBlock += `\n${resNotes.value.trim()}`;
-    }
+    if (resNotes.value.trim()) resBlock += `\n${resNotes.value.trim()}`;
     lines.push(resBlock);
   }
 
