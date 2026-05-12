@@ -12,22 +12,24 @@ body {
   background:#000;
   color:#fff;
   font-family:'Century Gothic',sans-serif;
-  padding:20px;
   margin:0;
+  padding:20px;
 }
 
+/* main form container */
 .container {
   background:#111;
   padding:20px;
   border-radius:10px;
   max-width:520px;
-  margin:0 auto 20px;
+  margin:0 auto;
   box-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
+/* standard inputs */
 label {
   display:block;
-  margin:6px 0 4px;
+  margin:8px 0 4px;
 }
 
 input, select, textarea {
@@ -46,23 +48,28 @@ textarea {
   resize:vertical;
 }
 
-/* checkbox rows */
+/* checkbox rows — unified alignment */
 .row {
-  display:flex;
+  display:grid;
+  grid-template-columns: 22px 1fr;
   align-items:center;
-  gap:8px;
+  column-gap:8px;
   margin:4px 0;
 }
 
 .row input[type=checkbox] {
-  width:auto;
+  width:16px;
+  height:16px;
+  cursor:pointer;
 }
 
+/* optional per-item notes */
 .subnote {
-  margin-left:26px;
+  margin-left:30px;
   margin-bottom:8px;
 }
 
+/* buttons */
 .button-row {
   display:flex;
   justify-content:center;
@@ -74,13 +81,14 @@ button {
   background:#444;
   color:#fff;
   border:none;
-  padding:10px 15px;
+  padding:10px 16px;
   border-radius:5px;
   cursor:pointer;
 }
 
 button:hover { background:#666; }
 
+/* modal */
 .modal {
   display:none;
   position:fixed;
@@ -97,6 +105,7 @@ button:hover { background:#666; }
 }
 
 #output {
+  width:100%;
   height:240px;
   resize:none;
 }
@@ -139,41 +148,56 @@ button:hover { background:#666; }
 <!-- TASKS -->
 <label>tasks:</label>
 
-<div class="row"><input type="checkbox" id="t1"><label for="t1">checked cost and coverage for medication</label></div>
+<div class="row">
+  <input type="checkbox" id="t1">
+  <label for="t1">checked cost and coverage for medication</label>
+</div>
 <input id="n1" class="subnote" placeholder="optional details">
 
-<div class="row"><input type="checkbox" id="t2"><label for="t2">checked benefit coverage for mbr</label></div>
+<div class="row">
+  <input type="checkbox" id="t2">
+  <label for="t2">checked benefit coverage for mbr</label>
+</div>
 <input id="n2" class="subnote" placeholder="optional details">
 
-<div class="row"><input type="checkbox" id="t3"><label for="t3">checked claims // located rx</label></div>
+<div class="row">
+  <input type="checkbox" id="t3">
+  <label for="t3">checked claims // located rx</label>
+</div>
 <input id="n3" class="subnote" placeholder="optional details">
 
-<div class="row"><input type="checkbox" id="t4"><label for="t4">check prior authorization status for rx</label></div>
+<div class="row">
+  <input type="checkbox" id="t4">
+  <label for="t4">check prior authorization status for rx</label>
+</div>
 <input id="n4" class="subnote" placeholder="optional details">
 
-<div class="row"><input type="checkbox" id="t5"><label for="t5">faxed forms to prov office</label></div>
+<div class="row">
+  <input type="checkbox" id="t5">
+  <label for="t5">faxed forms to prov office</label>
+</div>
 <input id="n5" class="subnote" placeholder="optional details">
 
-<!-- RES -->
+<!-- RESOLUTION -->
 <label>res:</label>
 
-<div class="row"><input type="checkbox" class="res" value="check/apply override per psa j/a"></div>
-<div class="row"><input type="checkbox" class="res" value="check eligibility"></div>
-<div class="row"><input type="checkbox" class="res" value="check pharm network"></div>
-<div class="row"><input type="checkbox" class="res" value="check quantity limits"></div>
-<div class="row"><input type="checkbox" class="res" value="confirm coverage"></div>
-<div class="row"><input type="checkbox" class="res" value="create pr case per j/a"></div>
-<div class="row"><input type="checkbox" class="res" value="escalation/xfer caller"></div>
-<div class="row"><input type="checkbox" class="res" value="explore alternative medication options"></div>
-<div class="row"><input type="checkbox" class="res" value="inform of formulary exception/coverage exception"></div>
-<div class="row"><input type="checkbox" class="res" value="initiate/fax forms for prior authorization"></div>
-<div class="row"><input type="checkbox" class="res" value="review prior authorization status"></div>
-<div class="row"><input type="checkbox" class="res" value="reach out to clinical regarding prior authorization"></div>
-<div class="row"><input type="checkbox" class="res" value="review accumulators"></div>
-<div class="row"><input type="checkbox" class="res" value="review/resolve claim reject"></div>
-<div class="row"><input type="checkbox" class="res" value="verify costshare details via benefits"></div>
+<div class="row"><input type="checkbox" class="res" value="check/apply override per psa j/a"><span>check/apply override per psa j/a</span></div>
+<div class="row"><input type="checkbox" class="res" value="check eligibility"><span>check eligibility</span></div>
+<div class="row"><input type="checkbox" class="res" value="check pharm network"><span>check pharm network</span></div>
+<div class="row"><input type="checkbox" class="res" value="check quantity limits"><span>check quantity limits</span></div>
+<div class="row"><input type="checkbox" class="res" value="confirm coverage"><span>confirm coverage</span></div>
+<div class="row"><input type="checkbox" class="res" value="create pr case per j/a"><span>create pr case per j/a</span></div>
+<div class="row"><input type="checkbox" class="res" value="escalation/xfer caller"><span>escalation/xfer caller</span></div>
+<div class="row"><input type="checkbox" class="res" value="explore alternative medication options"><span>explore alternative medication options</span></div>
+<div class="row"><input type="checkbox" class="res" value="inform of formulary exception/coverage exception"><span>inform of formulary exception/coverage exception</span></div>
+<div class="row"><input type="checkbox" class="res" value="initiate/fax forms for prior authorization"><span>initiate/fax forms for prior authorization</span></div>
+<div class="row"><input type="checkbox" class="res" value="review prior authorization status"><span>review prior authorization status</span></div>
+<div class="row"><input type="checkbox" class="res" value="reach out to clinical regarding prior authorization"><span>reach out to clinical regarding prior authorization</span></div>
+<div class="row"><input type="checkbox" class="res" value="review accumulators"><span>review accumulators</span></div>
+<div class="row"><input type="checkbox" class="res" value="review/resolve claim reject"><span>review/resolve claim reject</span></div>
+<div class="row"><input type="checkbox" class="res" value="verify costshare details via benefits"><span>verify costshare details via benefits</span></div>
 
-<textarea id="resNotes" placeholder="resolution notes"></textarea>
+<textarea id="resNotes" placeholder="additional resolution notes"></textarea>
 
 <div class="button-row">
   <button onclick="generateNote()">submit</button>
@@ -182,6 +206,7 @@ button:hover { background:#666; }
 
 </div>
 
+<!-- OUTPUT MODAL -->
 <div class="modal" id="noteModal">
   <div class="modal-content">
     <span class="close" onclick="noteModal.style.display='none'">&times;</span>
@@ -193,14 +218,14 @@ button:hover { background:#666; }
 </div>
 
 <script>
-function generateNote(){
-  const lines=[];
+function generateNote() {
+  const lines = [];
 
-  if(type.value) lines.push(`caller type: ${type.value} //`);
-  if(reason.value.trim()) lines.push(`reason for call: ${reason.value.trim()} //`);
-  if(rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
+  if (type.value) lines.push(`caller type: ${type.value} //`);
+  if (reason.value.trim()) lines.push(`reason for call: ${reason.value.trim()} //`);
+  if (rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
 
-  const tasks=[
+  const tasks = [
     ['t1','n1','checked cost and coverage for medication'],
     ['t2','n2','checked benefit coverage for mbr'],
     ['t3','n3','checked claims // located rx'],
@@ -208,31 +233,33 @@ function generateNote(){
     ['t5','n5','faxed forms to prov office']
   ];
 
-  const taskLines=[];
-  tasks.forEach(t=>{
-    if(document.getElementById(t[0]).checked){
-      const extra=document.getElementById(t[1]).value.trim();
+  const taskLines = [];
+  tasks.forEach(t => {
+    if (document.getElementById(t[0]).checked) {
+      const extra = document.getElementById(t[1]).value.trim();
       taskLines.push(`${t[2]}${extra ? ' // ' + extra : ''} //`);
     }
   });
 
-  if(taskLines.length){
+  if (taskLines.length) {
     lines.push(`tasks:\n${taskLines.join('\n')}`);
   }
 
-  const resLines=[];
-  document.querySelectorAll('.res:checked').forEach(r=>{
+  const resLines = [];
+  document.querySelectorAll('.res:checked').forEach(r => {
     resLines.push(`${r.value} //`);
   });
 
-  if(resLines.length){
-    lines.push(`res:\n${resLines.join('\n')}`);
-    if(resNotes.value.trim())
-      lines.push(`res note: ${resNotes.value.trim()}`);
+  if (resLines.length) {
+    let resBlock = `res:\n${resLines.join('\n')}`;
+    if (resNotes.value.trim()) {
+      resBlock += `\n${resNotes.value.trim()}`;
+    }
+    lines.push(resBlock);
   }
 
   output.value = lines.join('\n');
-  noteModal.style.display='block';
+  noteModal.style.display = 'block';
 }
 </script>
 
