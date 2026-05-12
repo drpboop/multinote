@@ -25,13 +25,12 @@ body {
   box-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
-/* Labels + inputs */
 label {
   display:block;
   margin:6px 0 4px;
 }
 
-input, select, textarea {
+input, textarea {
   width:100%;
   background:#222;
   color:#fff;
@@ -47,13 +46,13 @@ textarea {
   resize:vertical;
 }
 
-/* ✅ Checkbox rows – tighter spacing */
+/* checkbox rows */
 .row {
   display:grid;
   grid-template-columns:22px 1fr;
   column-gap:8px;
   align-items:center;
-  margin:2px 0; /* 🔧 reduced from 4px */
+  margin:2px 0;
 }
 
 .row input[type=checkbox] {
@@ -62,16 +61,15 @@ textarea {
   cursor:pointer;
 }
 
-/* ✅ Optional details: hidden and tight */
+/* optional task details */
 .subnote {
   display:none;
   margin-left:calc(22px + 8px);
   width:calc(100% - (22px + 8px));
   margin-top:4px;
-  margin-bottom:6px; /* only adds space when visible */
+  margin-bottom:6px;
 }
 
-/* Buttons */
 .button-row {
   display:flex;
   justify-content:center;
@@ -90,7 +88,7 @@ button {
 
 button:hover { background:#666; }
 
-/* Modal */
+/* modal */
 .modal {
   display:none;
   position:fixed;
@@ -126,19 +124,9 @@ button:hover { background:#666; }
 
 <div class="container">
 
-<label>caller type:</label>
-<select id="type">
-  <option value="">-- select --</option>
-  <option>member</option>
-  <option>parent of minor</option>
-  <option>spouse</option>
-  <option>provider</option>
-  <option>pharmacy</option>
-  <option>plan</option>
-  <option>third party</option>
-  <option>cms test caller</option>
-  <option>alexa (ai)</option>
-</select>
+<!-- INTERNAL ONLY -->
+<label>caller name:</label>
+<input id="callerName">
 
 <label>reason for call:</label>
 <input id="reason">
@@ -149,6 +137,7 @@ button:hover { background:#666; }
 <!-- TASKS -->
 <label>tasks:</label>
 
+<!-- Core tasks -->
 <div class="row">
   <input type="checkbox" id="t1" onchange="toggleTaskNote(1)">
   <label for="t1">checked cost and coverage for medication</label>
@@ -179,26 +168,34 @@ button:hover { background:#666; }
 </div>
 <input id="n5" class="subnote" placeholder="optional details">
 
-<!-- RESOLUTION -->
+<!-- Former RES options now tasks -->
+<div class="row">
+  <input type="checkbox" id="t6" onchange="toggleTaskNote(6)">
+  <label for="t6">check/apply override per psa j/a</label>
+</div>
+<input id="n6" class="subnote" placeholder="optional details">
+
+<div class="row">
+  <input type="checkbox" id="t7" onchange="toggleTaskNote(7)">
+  <label for="t7">review/resolve claim reject</label>
+</div>
+<input id="n7" class="subnote" placeholder="optional details">
+
+<div class="row">
+  <input type="checkbox" id="t8" onchange="toggleTaskNote(8)">
+  <label for="t8">verify costshare details via benefits</label>
+</div>
+<input id="n8" class="subnote" placeholder="optional details">
+
+<div class="row">
+  <input type="checkbox" id="t9" onchange="toggleTaskNote(9)">
+  <label for="t9">confirm coverage</label>
+</div>
+<input id="n9" class="subnote" placeholder="optional details">
+
+<!-- RES NOTES ONLY -->
 <label>res:</label>
-
-<div class="row"><input type="checkbox" class="res" value="check/apply override per psa j/a"><span>check/apply override per psa j/a</span></div>
-<div class="row"><input type="checkbox" class="res" value="check eligibility"><span>check eligibility</span></div>
-<div class="row"><input type="checkbox" class="res" value="check pharm network"><span>check pharm network</span></div>
-<div class="row"><input type="checkbox" class="res" value="check quantity limits"><span>check quantity limits</span></div>
-<div class="row"><input type="checkbox" class="res" value="confirm coverage"><span>confirm coverage</span></div>
-<div class="row"><input type="checkbox" class="res" value="create pr case per j/a"><span>create pr case per j/a</span></div>
-<div class="row"><input type="checkbox" class="res" value="escalation/xfer caller"><span>escalation/xfer caller</span></div>
-<div class="row"><input type="checkbox" class="res" value="explore alternative medication options"><span>explore alternative medication options</span></div>
-<div class="row"><input type="checkbox" class="res" value="inform of formulary exception/coverage exception"><span>inform of formulary exception/coverage exception</span></div>
-<div class="row"><input type="checkbox" class="res" value="initiate/fax forms for prior authorization"><span>initiate/fax forms for prior authorization</span></div>
-<div class="row"><input type="checkbox" class="res" value="review prior authorization status"><span>review prior authorization status</span></div>
-<div class="row"><input type="checkbox" class="res" value="reach out to clinical regarding prior authorization"><span>reach out to clinical regarding prior authorization</span></div>
-<div class="row"><input type="checkbox" class="res" value="review accumulators"><span>review accumulators</span></div>
-<div class="row"><input type="checkbox" class="res" value="review/resolve claim reject"><span>review/resolve claim reject</span></div>
-<div class="row"><input type="checkbox" class="res" value="verify costshare details via benefits"><span>verify costshare details via benefits</span></div>
-
-<textarea id="resNotes" placeholder="additional resolution notes"></textarea>
+<textarea id="resNotes" placeholder="resolution details"></textarea>
 
 <div class="button-row">
   <button onclick="generateNote()">submit</button>
@@ -207,6 +204,7 @@ button:hover { background:#666; }
 
 </div>
 
+<!-- OUTPUT -->
 <div class="modal" id="noteModal">
   <div class="modal-content">
     <span class="close" onclick="noteModal.style.display='none'">&times;</span>
@@ -228,16 +226,22 @@ function toggleTaskNote(num) {
 function generateNote() {
   const lines = [];
 
-  if (type.value) lines.push(`caller type: ${type.value} //`);
-  if (reason.value.trim()) lines.push(`reason for call: ${reason.value.trim()} //`);
-  if (rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
+  if (reason.value.trim())
+    lines.push(`reason for call: ${reason.value.trim()} //`);
+
+  if (rx.value.trim())
+    lines.push(`rx: ${rx.value.trim()} //`);
 
   const tasks = [
     ['t1','n1','checked cost and coverage for medication'],
     ['t2','n2','checked benefit coverage for mbr'],
     ['t3','n3','checked claims // located rx'],
     ['t4','n4','check prior authorization status for rx'],
-    ['t5','n5','faxed forms to prov office']
+    ['t5','n5','faxed forms to prov office'],
+    ['t6','n6','check/apply override per psa j/a'],
+    ['t7','n7','review/resolve claim reject'],
+    ['t8','n8','verify costshare details via benefits'],
+    ['t9','n9','confirm coverage']
   ];
 
   const taskLines = [];
@@ -252,15 +256,8 @@ function generateNote() {
     lines.push(`tasks:\n${taskLines.join('\n')}`);
   }
 
-  const resLines = [];
-  document.querySelectorAll('.res:checked').forEach(r => {
-    resLines.push(`${r.value} //`);
-  });
-
-  if (resLines.length) {
-    let resBlock = `res:\n${resLines.join('\n')}`;
-    if (resNotes.value.trim()) resBlock += `\n${resNotes.value.trim()}`;
-    lines.push(resBlock);
+  if (resNotes.value.trim()) {
+    lines.push(`res:\n${resNotes.value.trim()}`);
   }
 
   output.value = lines.join('\n');
