@@ -25,9 +25,10 @@ body {
   box-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
+/* Labels + inputs */
 label {
   display:block;
-  margin:8px 0 4px;
+  margin:6px 0 4px;
 }
 
 input, select, textarea {
@@ -46,13 +47,13 @@ textarea {
   resize:vertical;
 }
 
-/* checkbox row alignment */
+/* ✅ Checkbox rows – tighter spacing */
 .row {
   display:grid;
   grid-template-columns:22px 1fr;
   column-gap:8px;
   align-items:center;
-  margin:4px 0;
+  margin:2px 0; /* 🔧 reduced from 4px */
 }
 
 .row input[type=checkbox] {
@@ -61,14 +62,16 @@ textarea {
   cursor:pointer;
 }
 
-/* optional details – hidden by default */
+/* ✅ Optional details: hidden and tight */
 .subnote {
   display:none;
   margin-left:calc(22px + 8px);
   width:calc(100% - (22px + 8px));
-  margin-bottom:8px;
+  margin-top:4px;
+  margin-bottom:6px; /* only adds space when visible */
 }
 
+/* Buttons */
 .button-row {
   display:flex;
   justify-content:center;
@@ -87,6 +90,7 @@ button {
 
 button:hover { background:#666; }
 
+/* Modal */
 .modal {
   display:none;
   position:fixed;
@@ -203,7 +207,6 @@ button:hover { background:#666; }
 
 </div>
 
-<!-- OUTPUT MODAL -->
 <div class="modal" id="noteModal">
   <div class="modal-content">
     <span class="close" onclick="noteModal.style.display='none'">&times;</span>
