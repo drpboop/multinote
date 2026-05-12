@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>call note (personal)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Century Gothic', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255,255,255,.2);
+      width: 90%;
+      max-width: 520px;
+      margin: 0 auto 20px;
+    }
+
+    label, input, select, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      background-color: #222;
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      font-family: 'Century Gothic', sans-serif;
+      box-sizing: border-box;
+    }
+
+    label {
+      background: none;
+      padding: 0;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .task-group {
+      margin-bottom: 10px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .task-item input[type="checkbox"] {
+      width: auto;
+    }
+
+    .task-note {
+      width: 100%;
+      margin-left: 22px;
+      margin-top: 4px;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #444;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+
+    .error {
+      color: #ff6b6b;
+      font-size: .9rem;
+      margin-bottom: 8px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,.8);
+    }
+
+    .modal-content {
+      background-color: #111;
+      margin: 15% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 520px;
+      border-radius: 10px;
+    }
+
+    textarea#output {
+      height: 180px;
+      resize: none;
+      overflow: auto;
+      background-color: #222;
+      color: #fff;
+    }
+
+    .close {
+      float: right;
+      font-size: 26px;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close:hover {
+      color: #fff;
+    }
+
+    .section-title {
+      margin: 12px 0 6px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Internal-only field -->
+  <label for="callerName">caller name:</label>
+  <input type="text" id="callerName">
+
+  <label for="agentName">agt name:</label>
+  <input type="text" id="agentName">
+
+  <label for="agentId">agt id:</label>
+  <input type="text" id="agentId">
+
+  <label for="speakingTo">agt speaking to:</label>
+  <select id="speakingTo">
+    <option value="">-- select an option --</option>
+    <option value="member">member</option>
+    <option value="parent of minor">parent</option>
+    <option value="spouse">spouse</option>
+    <option value="provider">provider</option>
+    <option value="pharmacy">pharmacy</option>
+    <option value="plan">plan</option>
+    <option value="third party">third party</option>
+    <option value="cms test caller">cms test caller</option>
+    <option value="alexa (ai)">alexa (ai)</option>
+  </select>
+  <div id="speakingError" class="error"></div>
+
+  <label for="callRegarding">agt call regarding:</label>
+  <input type="text" id="callRegarding">
+
+  <label for="rx">rx:</label>
+  <input type="text" id="rx">
+
+</div>
+
+<!-- TASK SECTION -->
+<div class="container">
+  <div class="section-title">task(s):</div>
+
+  <div class="task-group">
+
+    <div class="task-item">
+      <input type="checkbox" id="t1">
+      <label for="t1">checked cost and coverage for medication</label>
+    </div>
+    <input class="task-note" id="n1" placeholder="optional details">
+
+    <div class="task-item">
+      <input type="checkbox" id="t2">
+      <label for="t2">checked benefit coverage for mbr</label>
+    </div>
+    <input class="task-note" id="n2" placeholder="optional details">
+
+    <div class="task-item">
+      <input type="checkbox" id="t3">
+      <label for="t3">checked claims // located rx</label>
+    </div>
+    <input class="task-note" id="n3" placeholder="optional details">
+
+    <div class="task-item">
+      <input type="checkbox" id="t4">
+      <label for="t4">check prior authorization status for rx</label>
+    </div>
+    <input class="task-note" id="n4" placeholder="optional details">
+
+    <div class="task-item">
+      <input type="checkbox" id="t5">
+      <label for="t5">faxed forms to prov office</label>
+    </div>
+    <input class="task-note" id="n5" placeholder="optional details">
+
+  </div>
+</div>
+
+<!-- RESOLUTION -->
+<div class="container">
+
+  <label for="resolution">res: advised agt to</label>
+  <select id="resolution">
+    <option value="">-- select an option --</option>
+    <option>check/apply override per psa j/a</option>
+    <option>check eligibility</option>
+    <option>check pharm network</option>
+    <option>check quantity limits</option>
+    <option>confirm coverage</option>
+    <option>create pr case per j/a</option>
+    <option>escalation/xfer caller</option>
+    <option>explore alternative medication options</option>
+    <option>inform of formulary exception/coverage exception</option>
+    <option>initiate/fax forms for prior authorization</option>
+    <option>review prior authorization status</option>
+    <option>reach out to clinical regarding prior authorization</option>
+    <option>review accumulators</option>
+    <option>review/resolve claim reject</option>
+    <option>verify costshare details via benefits</option>
+  </select>
+
+  <textarea id="resNotes" placeholder="additional notes"></textarea>
+
+  <div class="button-row">
+    <button onclick="generateNote()">submit</button>
+    <button onclick="resetForm()">cancel</button>
+  </div>
+</div>
+
+<!-- MODAL OUTPUT -->
+<div id="noteModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <textarea id="output" readonly></textarea>
+    <div class="button-row">
+      <button onclick="copyNote()">copy</button>
+      <button onclick="location.reload()">reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function generateNote() {
+  const speakingTo = document.getElementById('speakingTo');
+  const error = document.getElementById('speakingError');
+
+  if (!speakingTo.value) {
+    error.textContent = 'please select who the agt is speaking to.';
+    return;
+  }
+  error.textContent = '';
+
+  const agentName = agentName = document.getElementById('agentName').value;
+  const agentId = document.getElementById('agentId').value;
+
+  let note = `agt name&id: ${agentName} / ${agentId}
+agt speaking to: ${speakingTo.value}
+agt call regarding: ${document.getElementById('callRegarding').value}
+rx: ${document.getElementById('rx').value}`;
+
+  const tasks = [
+    { c:'t1', n:'n1', text:'checked cost and coverage for medication' },
+    { c:'t2', n:'n2', text:'checked benefit coverage for mbr' },
+    { c:'t3', n:'n3', text:'checked claims // located rx' },
+    { c:'t4', n:'n4', text:'check prior authorization status for rx' },
+    { c:'t5', n:'n5', text:'faxed forms to prov office' }
+  ];
+
+  const taskLines = [];
+
+  tasks.forEach(t => {
+    if (document.getElementById(t.c).checked) {
+      const extra = document.getElementById(t.n).value;
+      taskLines.push(`- ${t.text}${extra ? ' - ' + extra : ''}`);
+    }
+  });
+
+  if (taskLines.length > 0) {
+    note += `\ntask(s):\n${taskLines.join('\n')}`;
+  }
+
+  const res = document.getElementById('resolution').value;
+  const resNotes = document.getElementById('resNotes').value;
+  note += `\nres: advised agt to ${res}${resNotes ? ' / ' + resNotes : ''}`;
+
+  document.getElementById('output').value = note;
+  document.getElementById('noteModal').style.display = 'block';
+}
+
+function copyNote() {
+  const out = document.getElementById('output');
+  out.select();
+  document.execCommand('copy');
+}
+
+function closeModal() {
+  document.getElementById('noteModal').style.display = 'none';
+}
+
+function resetForm() {
+  document.querySelectorAll('input, textarea').forEach(e => e.value = '');
+  document.querySelectorAll('input[type=checkbox]').forEach(e => e.checked = false);
+  document.getElementById('speakingTo').selectedIndex = 0;
+  document.getElementById('resolution').selectedIndex = 0;
+  document.getElementById('speakingError').textContent = '';
+}
+</script>
+
+</body>
+</html>
