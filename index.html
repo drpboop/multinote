@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>note</title>
+<title>task based call note</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
@@ -243,16 +243,15 @@ document.getElementById(`n${i}`).style.display=checked?'block':'none';
 function generateNote(){
 
 let lines=[];
-let firstTaskUsed=false;
 
 TASKS.forEach((t,i)=>{
 if(!document.getElementById(`t${i}`).checked) return;
 
 let block = `${t.name}:\n`;
 
-if(!firstTaskUsed && reason.value.trim()){
+/* ✅ reason now appears in EVERY task */
+if(reason.value.trim()){
 block += `called in regarding ${reason.value.trim()} //\n`;
-firstTaskUsed = true;
 }
 
 block += `${t.taskText} //\n`;
