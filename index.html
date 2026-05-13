@@ -2,121 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>regular agent call note</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>task based call note</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
+body{background:#000;color:#fff;font-family:'Century Gothic',sans-serif;padding:20px;margin:0}
+.container{background:#111;padding:20px;border-radius:10px;max-width:550px;margin:auto;box-shadow:0 0 10px rgba(255,255,255,.2)}
+label{display:block;margin:6px 0 4px}
+input,textarea{width:100%;background:#222;color:#fff;border:none;padding:8px;border-radius:5px}
+textarea{min-height:60px}
 
-body {
-  background:#000;
-  color:#fff;
-  font-family:'Century Gothic',sans-serif;
-  margin:0;
-  padding:20px;
-}
+.row{display:grid;grid-template-columns:22px 1fr;align-items:center;gap:8px;margin:2px 0}
+.subnote{display:none;margin-left:30px;margin-bottom:6px}
+.resGroup{display:none;margin-left:30px;margin-bottom:6px}
 
-.container {
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  max-width:520px;
-  margin:0 auto;
-  box-shadow:0 0 10px rgba(255,255,255,.2);
-}
+.button-row{display:flex;justify-content:center;gap:10px;margin-top:12px}
+button{background:#444;color:#fff;border:none;padding:10px;border-radius:5px;cursor:pointer}
+button:hover{background:#666}
 
-label {
-  display:block;
-  margin:6px 0 4px;
-}
-
-input, textarea {
-  width:100%;
-  background:#222;
-  color:#fff;
-  border:none;
-  padding:8px;
-  border-radius:5px;
-  font-family:'Century Gothic',sans-serif;
-  box-sizing:border-box;
-}
-
-textarea {
-  min-height:60px;
-  resize:vertical;
-}
-
-/* checkbox rows */
-.row {
-  display:grid;
-  grid-template-columns:22px 1fr;
-  column-gap:8px;
-  align-items:center;
-  margin:2px 0;
-}
-
-.row input[type=checkbox] {
-  width:16px;
-  height:16px;
-  cursor:pointer;
-}
-
-/* optional task details */
-.subnote {
-  display:none;
-  margin-left:calc(22px + 8px);
-  width:calc(100% - (22px + 8px));
-  margin-top:4px;
-  margin-bottom:6px;
-}
-
-.button-row {
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:12px;
-}
-
-button {
-  background:#444;
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-button:hover { background:#666; }
-
-/* modal */
-.modal {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-}
-
-.modal-content {
-  background:#111;
-  margin:15% auto;
-  padding:20px;
-  max-width:520px;
-  border-radius:10px;
-}
-
-#output {
-  height:240px;
-  resize:none;
-}
-
-.close {
-  float:right;
-  font-size:28px;
-  cursor:pointer;
-  color:#aaa;
-}
-
-.close:hover { color:#fff; }
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8)}
+.modal-content{background:#111;margin:15% auto;padding:20px;border-radius:10px;max-width:550px}
+#output{height:250px}
+.close{float:right;font-size:28px;cursor:pointer;color:#aaa}
+.close:hover{color:#fff}
 </style>
 </head>
 
@@ -124,110 +32,180 @@ button:hover { background:#666; }
 
 <div class="container">
 
-<label>caller name:</label>
-<input id="callerName">
-
-<label>reason for call:</label>
+<label>called in regarding:</label>
 <input id="reason">
 
 <label>rx:</label>
 <input id="rx">
 
-<!-- TASKS -->
 <label>tasks:</label>
-
-<!-- TASK LIST -->
-<script>
-const TASKS = [
-  { id: 1, label: "cost estimator", text: "checked cost and coverage for medication" },
-  { id: 2, label: "view benefits", text: "checked benefit coverage for mbr" },
-  { id: 3, label: "manage claims", text: "checked claims // located rx" },
-  { id: 4, label: "request summary", text: "check prior authorization status for rx" },
-  { id: 5, label: "sending forms", text: "faxed forms to prov office // advised of turn around time per j/a" },
-  { id: 6, label: "prime resolution", text: "checked/created case for mbr" },
-  { id: 7, label: "locate pharm", text: "locate in network pharm" },
-  { id: 8, label: "accumulators", text: "reviewed mbr current accumulator totals" }
-];
-</script>
 
 <div id="taskContainer"></div>
 
-<label>res:</label>
-<textarea id="resNotes" placeholder="resolution details"></textarea>
-
 <div class="button-row">
-  <button onclick="generateNote()">submit</button>
-  <button onclick="location.reload()">cancel</button>
+<button onclick="generateNote()">submit</button>
+<button onclick="location.reload()">cancel</button>
 </div>
 
 </div>
 
-<!-- OUTPUT MODAL -->
 <div class="modal" id="noteModal">
-  <div class="modal-content">
-    <span class="close" onclick="noteModal.style.display='none'">&times;</span>
-    <textarea id="output" readonly></textarea>
-    <div class="button-row">
-      <button onclick="copyNote()">copy</button>
-      <button onclick="location.reload()">finish</button>
-    </div>
-  </div>
+<div class="modal-content">
+<span class="close" onclick="noteModal.style.display='none'">&times;</span>
+<textarea id="output" readonly></textarea>
+<div class="button-row">
+<button onclick="copyNote()">copy</button>
+<button onclick="location.reload()">finish</button>
+</div>
+</div>
 </div>
 
 <script>
-const taskContainer = document.getElementById('taskContainer');
 
-TASKS.forEach(t => {
-  taskContainer.insertAdjacentHTML('beforeend', `
-    <div class="row">
-      <input type="checkbox" id="t${t.id}" onchange="toggleTask(${t.id})">
-      <label for="t${t.id}">${t.label}</label>
-    </div>
-    <input id="n${t.id}" class="subnote" placeholder="optional details">
-  `);
+const TASKS = [
+{
+name:"manage claims",
+taskText:"checked claims // located rx",
+res:[
+"claim reversed","claim paid","claim rejected","pharm unable to reverse",
+"duplicate claim identified","r943 / refill too soon","r75 / prior authorization required",
+"r76 / quantity limits reject","override applied per psa j/a","no avail override",
+"escalated","no issue found"
+]
+},
+{
+name:"view benefits",
+taskText:"checked benefit coverage for mbr",
+res:[
+"coverage confirmed","non-covered","prior authorization required","tier level identified",
+"utilization management applies","plan limitation applies","benefit details reviewed",
+"category coverage confirmed","copay structure reviewed","cost share provided for medication"
+]
+},
+{
+name:"cost estimator",
+taskText:"checked cost and coverage for medication",
+res:[
+"estimated copay provided","prior authorization required","cost varies by pharmacy",
+"provided alt medications","advised NF","advised of FE required"
+]
+},
+{
+name:"request summary",
+taskText:"check prior authorization status for rx",
+res:[
+"advised of prior authorization approval","advised of prior authorization denial",
+"provided denial reasoning","additional info being requested","provider outreach needed",
+"clinical review in progress","status confirmed with provider","advised to schedule p2p",
+"advised of next steps for prior authorization","advised of appeal steps per denial letter"
+]
+},
+{
+name:"sending forms",
+taskText:"sending forms",
+res:[
+"forms faxed","forms emailed","forms requested from provider",
+"prior authorization denial resent to provider","prior authorization approval resent to provider",
+"fax confirmation received","incorrect fax number","provider office closed",
+"turn around time provider per j/a","follow up recommended"
+]
+},
+{
+name:"prime resolution",
+taskText:"checked/created case for mbr",
+res:[
+"case created","case updated","case escalated per AM",
+"case closed","case already open","no case needed"
+]
+},
+{
+name:"locate pharm",
+taskText:"locate in network pharm",
+res:[
+"in network pharmacy located","pharmacy not found","mail order option provided",
+"pharmacy transfer advised","provider to resend rx","location information provided"
+]
+},
+{
+name:"accumulators",
+taskText:"reviewed mbr current accumulator totals",
+res:[
+"accumulators reviewed","ded met","ded remaining","oop max remaining","oop max met",
+"accumulators still accruing","accumulators incorrect","recent claims not yet applied",
+"advised of accumulators balances","accumulators reset upcoming","financial responsibility explained"
+]
+}
+];
+
+const container = document.getElementById("taskContainer");
+
+TASKS.forEach((t,i)=>{
+container.insertAdjacentHTML("beforeend",`
+<div class="row">
+<input type="checkbox" id="t${i}" onchange="toggleTask(${i})">
+<label for="t${i}">${t.name}</label>
+</div>
+
+<div id="res${i}" class="resGroup">
+${t.res.map((r,j)=>`
+<div class="row">
+<input type="checkbox" id="t${i}r${j}">
+<span>${r}</span>
+</div>`).join("")}
+</div>
+
+<input id="n${i}" class="subnote" placeholder="additional details">
+`);
 });
 
-function toggleTask(id) {
-  const cb = document.getElementById('t' + id);
-  const note = document.getElementById('n' + id);
-  note.style.display = cb.checked ? 'block' : 'none';
-  if (!cb.checked) note.value = '';
+function toggleTask(i){
+const cb=document.getElementById(`t${i}`);
+document.getElementById(`res${i}`).style.display=cb.checked?'block':'none';
+document.getElementById(`n${i}`).style.display=cb.checked?'block':'none';
+if(!cb.checked) document.getElementById(`n${i}`).value='';
 }
 
-function generateNote() {
-  const lines = [];
+function generateNote(){
 
-  if (reason.value.trim())
-    lines.push(`reason for call: ${reason.value.trim()} //`);
+const lines=[];
+if(rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
 
-  if (rx.value.trim())
-    lines.push(`rx: ${rx.value.trim()} //`);
+let firstTaskUsed=false;
 
-  const taskLines = [];
-  TASKS.forEach(t => {
-    const cb = document.getElementById('t' + t.id);
-    if (cb.checked) {
-      const extra = document.getElementById('n' + t.id).value.trim();
-      taskLines.push(`${t.text}${extra ? ' // ' + extra : ''} //`);
-    }
-  });
+TASKS.forEach((t,i)=>{
+const cb=document.getElementById(`t${i}`);
+if(!cb.checked) return;
 
-  if (taskLines.length) {
-    lines.push(`tasks:\n${taskLines.join('\n')}`);
-  }
+let block=`${t.name}:\n`;
 
-  if (resNotes.value.trim()) {
-    lines.push(`res:\n${resNotes.value.trim()}`);
-  }
-
-  output.value = lines.join('\n');
-  noteModal.style.display = 'block';
+if(!firstTaskUsed && reason.value.trim()){
+block+=`called in regarding ${reason.value.trim()}\n`;
+firstTaskUsed=true;
 }
 
-function copyNote() {
-  output.select();
-  document.execCommand('copy');
+block+=`${t.taskText}\nres:\n`;
+
+t.res.forEach((r,j)=>{
+if(document.getElementById(`t${i}r${j}`).checked){
+block+=`${r} //\n`;
 }
+});
+
+const extra=document.getElementById(`n${i}`).value.trim();
+if(extra) block+=extra;
+
+lines.push(block.trim());
+});
+
+output.value = `tasks:\n\n${lines.join('\n\n')}`;
+noteModal.style.display='block';
+}
+
+function copyNote(){
+output.select();
+document.execCommand("copy");
+}
+
 </script>
 
 </body>
