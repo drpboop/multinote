@@ -2,35 +2,113 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>task based call note</title>
+<title>notes</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{background:#000;color:#fff;font-family:'Century Gothic',sans-serif;padding:20px;margin:0}
-.container{background:#111;padding:20px;border-radius:10px;max-width:550px;margin:auto;box-shadow:0 0 10px rgba(255,255,255,.2)}
-label{display:block;margin:6px 0 4px}
-input,textarea{width:100%;background:#222;color:#fff;border:none;padding:8px;border-radius:5px}
-textarea{min-height:60px}
+body{
+  background:#000;
+  color:#fff;
+  font-family:'Century Gothic',sans-serif;
+  padding:20px;
+  margin:0;
+}
 
-.row{display:grid;grid-template-columns:22px 1fr;align-items:center;gap:8px;margin:2px 0}
-.subnote{display:none;margin-left:30px;margin-bottom:6px}
-.resGroup{display:none;margin-left:30px;margin-bottom:6px}
+.container{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  max-width:560px;
+  margin:auto;
+  box-shadow:0 0 10px rgba(255,255,255,.2);
+}
 
-.button-row{display:flex;justify-content:center;gap:10px;margin-top:12px}
-button{background:#444;color:#fff;border:none;padding:10px;border-radius:5px;cursor:pointer}
+label{
+  display:block;
+  margin:8px 0 4px;
+}
+
+input,textarea{
+  width:100%;
+  background:#222;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  box-sizing:border-box;
+}
+
+/* aligned rows */
+.row{
+  display:grid;
+  grid-template-columns:20px 1fr;
+  gap:10px;
+  align-items:center;
+  margin:4px 0;
+}
+
+/* sub sections aligned with label text */
+.resGroup,
+.subnote{
+  display:none;
+  margin-left:30px;
+  width:calc(100% - 30px);
+}
+
+/* buttons */
+.button-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:12px;
+}
+
+button{
+  background:#444;
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
 button:hover{background:#666}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8)}
-.modal-content{background:#111;margin:15% auto;padding:20px;border-radius:10px;max-width:550px}
-#output{height:250px}
-.close{float:right;font-size:28px;cursor:pointer;color:#aaa}
-.close:hover{color:#fff}
+/* modal */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+}
+
+.modal-content{
+  background:#111;
+  margin:12% auto;
+  padding:20px;
+  border-radius:10px;
+  max-width:560px;
+}
+
+#output{
+  height:260px;
+  width:100%;
+}
+
+.close{
+  float:right;
+  cursor:pointer;
+  font-size:26px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
+<label>caller name:</label>
+<input id="callerName">
 
 <label>called in regarding:</label>
 <input id="reason">
@@ -39,30 +117,31 @@ button:hover{background:#666}
 <input id="rx">
 
 <label>tasks:</label>
-
 <div id="taskContainer"></div>
 
 <div class="button-row">
 <button onclick="generateNote()">submit</button>
-<button onclick="location.reload()">cancel</button>
+<button onclick="resetForm()">cancel</button>
 </div>
 
 </div>
 
 <div class="modal" id="noteModal">
 <div class="modal-content">
-<span class="close" onclick="noteModal.style.display='none'">&times;</span>
+<span class="close" onclick="closeModal()">&times;</span>
+
 <textarea id="output" readonly></textarea>
+
 <div class="button-row">
 <button onclick="copyNote()">copy</button>
-<button onclick="location.reload()">finish</button>
+<button onclick="finishNote()">finish</button>
 </div>
 </div>
 </div>
 
 <script>
 
-const TASKS = [
+const TASKS=[
 {
 name:"manage claims",
 taskText:"checked claims // located rx",
@@ -77,9 +156,10 @@ res:[
 name:"view benefits",
 taskText:"checked benefit coverage for mbr",
 res:[
-"coverage confirmed","non-covered","prior authorization required","tier level identified",
-"utilization management applies","plan limitation applies","benefit details reviewed",
-"category coverage confirmed","copay structure reviewed","cost share provided for medication"
+"coverage confirmed","non-covered","prior authorization required",
+"tier level identified","utilization management applies","plan limitation applies",
+"benefit details reviewed","category coverage confirmed",
+"copay structure reviewed","cost share provided for medication"
 ]
 },
 {
@@ -89,55 +169,10 @@ res:[
 "estimated copay provided","prior authorization required","cost varies by pharmacy",
 "provided alt medications","advised NF","advised of FE required"
 ]
-},
-{
-name:"request summary",
-taskText:"check prior authorization status for rx",
-res:[
-"advised of prior authorization approval","advised of prior authorization denial",
-"provided denial reasoning","additional info being requested","provider outreach needed",
-"clinical review in progress","status confirmed with provider","advised to schedule p2p",
-"advised of next steps for prior authorization","advised of appeal steps per denial letter"
-]
-},
-{
-name:"sending forms",
-taskText:"sending forms",
-res:[
-"forms faxed","forms emailed","forms requested from provider",
-"prior authorization denial resent to provider","prior authorization approval resent to provider",
-"fax confirmation received","incorrect fax number","provider office closed",
-"turn around time provider per j/a","follow up recommended"
-]
-},
-{
-name:"prime resolution",
-taskText:"checked/created case for mbr",
-res:[
-"case created","case updated","case escalated per AM",
-"case closed","case already open","no case needed"
-]
-},
-{
-name:"locate pharm",
-taskText:"locate in network pharm",
-res:[
-"in network pharmacy located","pharmacy not found","mail order option provided",
-"pharmacy transfer advised","provider to resend rx","location information provided"
-]
-},
-{
-name:"accumulators",
-taskText:"reviewed mbr current accumulator totals",
-res:[
-"accumulators reviewed","ded met","ded remaining","oop max remaining","oop max met",
-"accumulators still accruing","accumulators incorrect","recent claims not yet applied",
-"advised of accumulators balances","accumulators reset upcoming","financial responsibility explained"
-]
 }
 ];
 
-const container = document.getElementById("taskContainer");
+const container=document.getElementById("taskContainer");
 
 TASKS.forEach((t,i)=>{
 container.insertAdjacentHTML("beforeend",`
@@ -159,17 +194,18 @@ ${t.res.map((r,j)=>`
 });
 
 function toggleTask(i){
-const cb=document.getElementById(`t${i}`);
-document.getElementById(`res${i}`).style.display=cb.checked?'block':'none';
-document.getElementById(`n${i}`).style.display=cb.checked?'block':'none';
-if(!cb.checked) document.getElementById(`n${i}`).value='';
+const checked=document.getElementById(`t${i}`).checked;
+document.getElementById(`res${i}`).style.display=checked?'block':'none';
+document.getElementById(`n${i}`).style.display=checked?'block':'none';
+
+if(!checked){
+document.getElementById(`n${i}`).value='';
+}
 }
 
 function generateNote(){
 
 const lines=[];
-if(rx.value.trim()) lines.push(`rx: ${rx.value.trim()} //`);
-
 let firstTaskUsed=false;
 
 TASKS.forEach((t,i)=>{
@@ -178,32 +214,64 @@ if(!cb.checked) return;
 
 let block=`${t.name}:\n`;
 
+/* inject reason into first task */
 if(!firstTaskUsed && reason.value.trim()){
-block+=`called in regarding ${reason.value.trim()}\n`;
+block+=`called in regarding ${reason.value.trim()} //\n`;
 firstTaskUsed=true;
 }
 
-block+=`${t.taskText}\nres:\n`;
+block+=`${t.taskText}\n`;
 
+/* RX is now in task block */
+if(rx.value.trim()){
+block+=`rx: ${rx.value.trim()}\n`;
+}
+
+/* res lines */
 t.res.forEach((r,j)=>{
 if(document.getElementById(`t${i}r${j}`).checked){
 block+=`${r} //\n`;
 }
 });
 
+/* optional text */
 const extra=document.getElementById(`n${i}`).value.trim();
 if(extra) block+=extra;
 
-lines.push(block.trim());
+/* add block separator */
+lines.push(block.trim()+" //");
 });
 
-output.value = `tasks:\n\n${lines.join('\n\n')}`;
+output.value=lines.join('\n\n');
 noteModal.style.display='block';
 }
 
+/* COPY */
 function copyNote(){
 output.select();
 document.execCommand("copy");
+}
+
+/* FINISH (full reset) */
+function finishNote(){
+resetForm();
+noteModal.style.display='none';
+}
+
+/* RESET */
+function resetForm(){
+document.querySelectorAll("input, textarea").forEach(el=>{
+if(el.type==="checkbox") el.checked=false;
+else el.value="";
+});
+
+document.querySelectorAll(".resGroup").forEach(el=>el.style.display="none");
+document.querySelectorAll(".subnote").forEach(el=>el.style.display="none");
+}
+
+/* close modal */
+function closeModal(){
+noteModal.style.display='none';
 }
 
 </script>
