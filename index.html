@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>task based call note</title>
+<title>note</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
+body{
   background:#000;
   color:#fff;
   font-family:sans-serif;
@@ -14,20 +14,20 @@ body {
   padding:20px;
 }
 
-.container {
+.container{
   background:#111;
-  padding:20px;
+  padding:18px;
   border-radius:10px;
   max-width:600px;
   margin:auto;
 }
 
-label {
+label{
   display:block;
-  margin:8px 0 4px;
+  margin:6px 0 3px;
 }
 
-input, textarea {
+input, textarea{
   width:100%;
   background:#222;
   color:#fff;
@@ -37,48 +37,57 @@ input, textarea {
   box-sizing:border-box;
 }
 
-.row {
+textarea{
+  min-height:50px;
+  resize:none;
+  overflow:hidden;
+}
+
+/* tighter spacing */
+.row{
   display:grid;
   grid-template-columns:20px 1fr;
-  gap:10px;
+  gap:8px;
   align-items:center;
-  margin:3px 0;
+  margin:2px 0;
 }
 
-/* ✅ FIXED ALIGNMENT */
 .resGroup,
-.subnote {
+.subnote{
   display:none;
-  padding-left:30px; /* aligns under text, NOT checkbox */
+  padding-left:28px;
+  margin-top:4px;
 }
 
-/* output boxes */
-.outputBox {
-  margin-top:15px;
+/* output */
+.outputBox{
+  margin-top:12px;
   background:#111;
   padding:12px;
   border-radius:8px;
 }
 
-.outputTitle {
-  font-size:14px;
+.outputTitle{
+  font-size:13px;
   font-weight:bold;
-  margin-bottom:6px;
+  margin-bottom:5px;
   color:#bbb;
 }
 
-.button-row {
+/* centered buttons */
+.button-row{
   display:flex;
+  justify-content:center;
   gap:10px;
   margin-top:10px;
   flex-wrap:wrap;
 }
 
-button {
+button{
   background:#444;
   color:#fff;
   border:none;
-  padding:8px 12px;
+  padding:8px 14px;
   border-radius:5px;
   cursor:pointer;
 }
@@ -112,14 +121,78 @@ button {
 
 <script>
 
-const TASKS=[{name:"manage claims",taskText:"checked claims // located rx",res:["claim reversed","claim paid","claim rejected","pharm unable to reverse","duplicate claim identified","r943 / refill too soon","r75 / prior authorization required","r76 / quantity limits reject","override applied per psa j/a","no avail override","escalated","no issue found"]},
-{name:"view benefits",taskText:"checked benefit coverage for mbr",res:["coverage confirmed","non-covered","prior authorization required","tier level identified","utilization management applies","plan limitation applies","benefit details reviewed","category coverage confirmed","copay structure reviewed","cost share provided for medication"]},
-{name:"cost estimator",taskText:"checked cost and coverage for medication",res:["estimated copay provided","prior authorization required","cost varies by pharmacy","provided alt medications","advised NF","advised of FE required"]},
-{name:"request summary",taskText:"check prior authorization status for rx",res:["advised of prior authorization approval","advised of prior authorization denial","provided denial reasoning","additional info being requested","provider outreach needed","clinical review in progress","status confirmed with provider","advised to schedule p2p","advised of next steps for prior authorization","advised of appeal steps per denial letter"]},
-{name:"sending forms",taskText:"sending forms",res:["forms faxed","forms emailed","forms requested from provider","prior authorization denial resent to provider","prior authorization approval resent to provider","fax confirmation received","incorrect fax number","provider office closed","turn around time provider per j/a","follow up recommended"]},
-{name:"prime resolution",taskText:"checked/created case for mbr",res:["case created","case updated","case escalated per AM","case closed","case already open","no case needed"]},
-{name:"locate pharm",taskText:"locate in network pharm",res:["in network pharmacy located","pharmacy not found","mail order option provided","pharmacy transfer advised","provider to resend rx","location information provided"]},
-{name:"accumulators",taskText:"reviewed mbr current accumulator totals",res:["accumulators reviewed","ded met","ded remaining","oop max remaining","oop max met","accumulators still accruing","accumulators incorrect","recent claims not yet applied","advised of accumulators balances","accumulators reset upcoming","financial responsibility explained"]}];
+/* ✅ auto expand function */
+function autoExpand(el){
+el.style.height="auto";
+el.style.height=(el.scrollHeight)+"px";
+}
+
+const TASKS=[
+{
+name:"manage claims",
+taskText:"checked claims // located rx",
+res:["claim reversed","claim paid","claim rejected","pharm unable to reverse",
+"duplicate claim identified","r943 / refill too soon","r75 / prior authorization required",
+"r76 / quantity limits reject","override applied per psa j/a","no avail override",
+"escalated","no issue found"]
+},
+{
+name:"view benefits",
+taskText:"checked benefit coverage for mbr",
+res:["coverage confirmed","non-covered","prior authorization required",
+"tier level identified","utilization management applies","plan limitation applies",
+"benefit details reviewed","category coverage confirmed",
+"copay structure reviewed","cost share provided for medication"]
+},
+{
+name:"cost estimator",
+taskText:"checked cost and coverage for medication",
+res:["estimated copay provided","prior authorization required",
+"cost varies by pharmacy","provided alt medications",
+"advised NF","advised of FE required"]
+},
+{
+name:"request summary",
+taskText:"check prior authorization status for rx",
+res:["advised of prior authorization approval","advised of prior authorization denial",
+"provided denial reasoning","additional info being requested",
+"provider outreach needed","clinical review in progress",
+"status confirmed with provider","advised to schedule p2p",
+"advised of next steps for prior authorization","advised of appeal steps per denial letter"]
+},
+{
+name:"sending forms",
+taskText:"sending forms",
+res:["forms faxed","forms emailed","forms requested from provider",
+"prior authorization denial resent to provider",
+"prior authorization approval resent to provider",
+"fax confirmation received","incorrect fax number",
+"provider office closed","turn around time provider per j/a",
+"follow up recommended"]
+},
+{
+name:"prime resolution",
+taskText:"checked/created case for mbr",
+res:["case created","case updated","case escalated per AM",
+"case closed","case already open","no case needed"]
+},
+{
+name:"locate pharm",
+taskText:"locate in network pharm",
+res:["in network pharmacy located","pharmacy not found",
+"mail order option provided","pharmacy transfer advised",
+"provider to resend rx","location information provided"]
+},
+{
+name:"accumulators",
+taskText:"reviewed mbr current accumulator totals",
+res:["accumulators reviewed","ded met","ded remaining",
+"oop max remaining","oop max met","accumulators still accruing",
+"accumulators incorrect","recent claims not yet applied",
+"advised of accumulators balances","accumulators reset upcoming",
+"financial responsibility explained"]
+}
+];
 
 const container=document.getElementById("taskContainer");
 
@@ -138,17 +211,17 @@ ${t.res.map((r,j)=>`
 </div>`).join("")}
 </div>
 
-<textarea id="n${i}" class="subnote" placeholder="additional details"></textarea>
+<textarea id="n${i}" class="subnote" placeholder="additional details" oninput="autoExpand(this)"></textarea>
 `);
 });
 
 function toggleTask(i){
 const checked=document.getElementById(`t${i}`).checked;
 document.getElementById(`res${i}`).style.display=checked?'block':'none';
-document.getElementById(`n${i}`).style.display=checked?'block':'block';
+document.getElementById(`n${i}`).style.display=checked?'block':'none';
 if(!checked){
-document.getElementById(`n${i}`).style.display='none';
 document.getElementById(`n${i}`).value='';
+document.getElementById(`n${i}`).style.height="auto";
 }
 }
 
@@ -181,8 +254,9 @@ lines.push(`${r} //`);
 const extra=document.getElementById(`n${i}`).value.trim();
 if(extra) lines.push(extra);
 
+/* remove trailing // */
 if(lines.length){
-lines[lines.length-1] = lines[lines.length-1].replace(/\s*\/\/$/, "");
+lines[lines.length-1]=lines[lines.length-1].replace(/\s*\/\/$/,"");
 }
 
 const finalText=lines.join("\n");
@@ -190,7 +264,7 @@ const finalText=lines.join("\n");
 output.insertAdjacentHTML("beforeend",`
 <div class="outputBox">
 <div class="outputTitle">${t.name.toUpperCase()}</div>
-<textarea readonly>${finalText}</textarea>
+<textarea readonly oninput="autoExpand(this)">${finalText}</textarea>
 <div class="button-row">
 <button onclick="copyThis(this)">copy</button>
 <button onclick="finishNote()">finish</button>
@@ -201,6 +275,7 @@ output.insertAdjacentHTML("beforeend",`
 
 }
 
+/* expand outputs too */
 function copyThis(btn){
 const t=btn.closest('.outputBox').querySelector('textarea');
 t.select();
@@ -215,7 +290,10 @@ document.getElementById("outputContainer").innerHTML="";
 function resetForm(){
 document.querySelectorAll("input,textarea").forEach(el=>{
 if(el.type==="checkbox") el.checked=false;
-else el.value="";
+else {
+el.value="";
+el.style.height="auto";
+}
 });
 document.querySelectorAll(".resGroup,.subnote").forEach(el=>el.style.display="none");
 }
