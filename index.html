@@ -90,6 +90,7 @@ button{
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -108,7 +109,7 @@ button{
 
 <div class="button-row">
 <button onclick="generateNote()">submit</button>
-<button onclick="resetForm()">cancel</button>
+<button onclick="clearOutputs()">cancel</button>
 </div>
 
 <div id="outputContainer"></div>
@@ -316,6 +317,11 @@ function copyThis(btn){
 const t=btn.closest('.outputBox').querySelector('textarea');
 t.select();
 document.execCommand("copy");
+}
+
+/* ✅ NEW cancel behavior */
+function clearOutputs(){
+document.getElementById("outputContainer").innerHTML="";
 }
 
 function finishNote(){
