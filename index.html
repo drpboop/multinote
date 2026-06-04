@@ -2,269 +2,339 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>User Task Tracker</title>
+<title>note</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f6fa;
-    margin: 0;
-    padding: 20px;
+body{
+  background:#000;
+  color:#fff;
+  font-family:"Century Gothic", sans-serif;
+  margin:0;
+  padding:20px;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    background: #fff;
-    padding: 20px 25px 30px 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.container{
+  background:#111;
+  padding:18px;
+  border-radius:10px;
+  max-width:600px;
+  margin:auto;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+label{
+  display:block;
+  margin:6px 0 3px;
 }
 
-.task {
-    margin-bottom: 20px;
+input, textarea{
+  width:100%;
+  background:#222;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  box-sizing:border-box;
 }
 
-.task label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+textarea{
+  min-height:50px;
+  resize:none;
+  overflow:hidden;
 }
 
-textarea, select {
-    width: 100%;
-    padding: 6px 8px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 13px;
+.row{
+  display:grid;
+  grid-template-columns:20px 1fr;
+  gap:8px;
+  align-items:center;
+  margin:2px 0;
 }
 
-textarea {
-    resize: none;
-    overflow: hidden;
+.resGroup,
+.subnote{
+  display:none;
+  padding-left:28px;
+  margin-top:4px;
 }
 
-.buttons {
-    text-align: center;
-    margin-top: 20px;
+.outputBox{
+  margin-top:12px;
+  background:#111;
+  padding:12px;
+  border-radius:8px;
 }
 
-button {
-    padding: 8px 20px;
-    margin: 6px;
-    border: none;
-    border-radius: 6px;
-    background-color: #2f6fed;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
+.outputTitle{
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:5px;
+  color:#bbb;
 }
 
-button:hover {
-    background-color: #1e4fc5;
+.button-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
 }
 
-.copy-section {
-    margin-top: 12px;
-    background: #f1f3f8;
-    padding: 10px;
-    border-radius: 6px;
-}
-
-.copy-section label {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 4px;
-    display: block;
+button{
+  background:#444;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:5px;
+  cursor:pointer;
 }
 </style>
-
-<script>
-function autoExpand(field) {
-    field.style.height = "auto";
-    field.style.height = (field.scrollHeight) + "px";
-}
-
-function buildOutput() {
-    let result = "";
-
-    document.querySelectorAll(".task").forEach(task => {
-        let title = task.dataset.title;
-        let text = task.querySelector("textarea").value.trim();
-        let res = task.querySelector("select").value;
-
-        if (text || res) {
-            result += title + ": " + text;
-            if (res) result += " // " + res;
-            result += "\n";
-        }
-    });
-
-    document.getElementById("output").value = result.trim();
-    autoExpand(document.getElementById("output"));
-}
-
-function copyOutput() {
-    let output = document.getElementById("output");
-    output.select();
-    document.execCommand("copy");
-}
-</script>
 </head>
-
 <body>
+
 <div class="container">
 
-<h1>User Task Notes</h1>
+<label>caller name:</label>
+<input id="callerName">
 
-<!-- MANAGE CLAIMS -->
-<div class="task" data-title="Manage Claims">
-<label>Manage Claims</label>
-<textarea oninput="autoExpand(this)">checked claims</textarea>
-<select>
-<option value="">Select result</option>
-<option>claim paid</option>
-<option>claim rejected</option>
-<option>claim reversed</option>
-<option>duplicate claim identified</option>
-<option>escalated</option>
-<option>no avail override</option>
-<option>override applied per psa j/a</option>
-<option>pharm unable to reverse</option>
-<option>r75 / prior authorization required</option>
-<option>r76 / quantity limits</option>
-<option>r88 / dur</option>
-<option>r943 / refill too soon</option>
-<option>reviewed pricing details</option>
-</select>
+<label>called in regarding:</label>
+<input id="reason">
+
+<label>rx:</label>
+<input id="rx">
+
+<label>tasks:</label>
+<div id="taskContainer"></div>
+
+<div class="button-row">
+<button onclick="generateNote()">submit</button>
+<button onclick="resetForm()">cancel</button>
 </div>
 
-<!-- VIEW BENEFITS -->
-<div class="task" data-title="View Benefits">
-<label>View Benefits</label>
-<textarea oninput="autoExpand(this)">checked benefit coverage</textarea>
-<select>
-<option value="">Select result</option>
-<option>reviewed benefit details</option>
-<option>category coverage confirmed</option>
-<option>reviewed copay structure</option>
-<option>cost share provided per tier</option>
-<option>coverage confirmed</option>
-<option>plan limitation applies</option>
-<option>utilization management applies</option>
-</select>
-</div>
-
-<!-- COST ESTIMATOR -->
-<div class="task" data-title="Cost Estimator">
-<label>Cost Estimator</label>
-<textarea oninput="autoExpand(this)">checked cost and coverage for medication</textarea>
-<select>
-<option value="">Select result</option>
-<option>advised non formulary</option>
-<option>advised of prior authorization / quantity limits required</option>
-<option>advised of tier / coverage</option>
-<option>cost varies by pharmacy</option>
-<option>estimated copay provided</option>
-<option>provided alt medications</option>
-<option>tier level identified</option>
-</select>
-</div>
-
-<!-- REQUEST SUMMARY -->
-<div class="task" data-title="Request Summary">
-<label>Request Summary</label>
-<textarea oninput="autoExpand(this)">check prior authorization status for rx</textarea>
-<select>
-<option value="">Select result</option>
-<option>advised of appeal / next steps per denial letter</option>
-<option>advised of approval</option>
-<option>advised of denial</option>
-<option>advised to schedule p2p</option>
-<option>clinical review in progress</option>
-<option>provider outreach needed / additional info being requested</option>
-</select>
-</div>
-
-<!-- SENDING FORMS -->
-<div class="task" data-title="Sending Forms">
-<label>Sending Forms</label>
-<textarea oninput="autoExpand(this)">reviewed forms</textarea>
-<select>
-<option value="">Select result</option>
-<option>follow up recommended</option>
-<option>forms emailed</option>
-<option>forms faxed</option>
-<option>prior authorization approval resent to provider</option>
-<option>prior authorization denial resent to provider</option>
-<option>turnaround time provided per j/a</option>
-</select>
-</div>
-
-<!-- PRIME RESOLUTION -->
-<div class="task" data-title="Prime Resolution">
-<label>Prime Resolution</label>
-<textarea oninput="autoExpand(this)">reviewed cases</textarea>
-<select>
-<option value="">Select result</option>
-<option>case already open</option>
-<option>case closed</option>
-<option>case created</option>
-<option>case escalated</option>
-<option>case updated</option>
-<option>no case needed</option>
-</select>
-</div>
-
-<!-- LOCATE PHARM -->
-<div class="task" data-title="Locate Pharmacy">
-<label>Locate Pharmacy</label>
-<textarea oninput="autoExpand(this)">checked in network pharms</textarea>
-<select>
-<option value="">Select result</option>
-<option>located and provided pharm details</option>
-<option>mail order option provided</option>
-<option>pharmacy not found</option>
-<option>provider to resend rx</option>
-</select>
-</div>
-
-<!-- ACCUMULATORS -->
-<div class="task" data-title="Accumulators">
-<label>Accumulators</label>
-<textarea oninput="autoExpand(this)">reviewed current accumulator totals</textarea>
-<select>
-<option value="">Select result</option>
-<option>accumulators incorrect</option>
-<option>accumulators reset upcoming</option>
-<option>accumulators still accruing</option>
-<option>advised of accumulator balances</option>
-<option>ded met</option>
-<option>ded remaining</option>
-<option>financial responsibility explained</option>
-<option>oop max met</option>
-<option>oop max remaining</option>
-<option>recent claims not yet applied</option>
-</select>
-</div>
-
-<!-- OUTPUT -->
-<div class="copy-section">
-<label>FINAL NOTE OUTPUT</label>
-<textarea id="output" readonly oninput="autoExpand(this)"></textarea>
-</div>
-
-<div class="buttons">
-<button onclick="buildOutput()">Build Note</button>
-<button onclick="copyOutput()">Copy</button>
-</div>
+<div id="outputContainer"></div>
 
 </div>
+
+<script>
+
+function autoExpand(el){
+el.style.height="auto";
+el.style.height=(el.scrollHeight)+"px";
+}
+
+const TASKS=[
+{
+name:"manage claims",
+taskText:"checked claims",
+res:[
+"claim paid",
+"claim rejected",
+"claim reversed",
+"duplicate claim identified",
+"escalated",
+"no avail override",
+"override applied per psa j/a",
+"pharm unable to reverse",
+"r75 / prior authorization required",
+"r76 / quantity limits",
+"r88 / dur",
+"r943 / refill too soon",
+"reviewed pricing details"
+]
+},
+{
+name:"view benefits",
+taskText:"checked benefit coverage",
+res:[
+"reviewed benefit details",
+"category coverage confirmed",
+"reviewed copay structure",
+"cost share provided per tier",
+"coverage confirmed",
+"plan limitation applies",
+"utilization management applies"
+]
+},
+{
+name:"cost estimator",
+taskText:"checked cost and coverage for medication",
+res:[
+"advised non formulary",
+"advised of prior authorization / quantity limits required",
+"advised of tier / coverage",
+"cost varies by pharmacy",
+"estimated copay provided",
+"provided alt medications",
+"tier level identified"
+]
+},
+{
+name:"request summary",
+taskText:"check prior authorization status for rx",
+res:[
+"advised of appeal / next steps per denial letter",
+"advised of approval",
+"advised of denial",
+"advised to schedule p2p",
+"clinical review in progress",
+"provider outreach needed / additional info being requested"
+]
+},
+{
+name:"sending forms",
+taskText:"reviewed forms",
+res:[
+"follow up recommended",
+"forms emailed",
+"forms faxed",
+"prior authorization approval resent to provider",
+"prior authorization denial resent to provider",
+"turnaround time provided per j/a"
+]
+},
+{
+name:"prime resolution",
+taskText:"reviewed cases",
+res:[
+"case already open",
+"case closed",
+"case created",
+"case escalated",
+"case updated",
+"no case needed"
+]
+},
+{
+name:"locate pharm",
+taskText:"check in network pharms",
+res:[
+"located and provided pharm details",
+"mail order option provided",
+"pharmacy not found",
+"provider to resend rx"
+]
+},
+{
+name:"accumulators",
+taskText:"reviewed current accumulator totals",
+res:[
+"accumulators incorrect",
+"accumulators reset upcoming",
+"accumulators still accruing",
+"advised of accumulator balances",
+"ded met",
+"ded remaining",
+"financial responsibility explained",
+"oop max met",
+"oop max remaining",
+"recent claims not yet applied"
+]
+}
+];
+
+const container=document.getElementById("taskContainer");
+
+TASKS.forEach((t,i)=>{
+container.insertAdjacentHTML("beforeend",`
+<div class="row">
+<input type="checkbox" id="t${i}" onchange="toggleTask(${i})">
+<label>${t.name}</label>
+</div>
+
+<div id="res${i}" class="resGroup">
+${t.res.map((r,j)=>`
+<div class="row">
+<input type="checkbox" id="t${i}r${j}">
+<span>${r}</span>
+</div>`).join("")}
+</div>
+
+<textarea id="n${i}" class="subnote" placeholder="additional details" oninput="autoExpand(this)"></textarea>
+`);
+});
+
+function toggleTask(i){
+const checked=document.getElementById(`t${i}`).checked;
+document.getElementById(`res${i}`).style.display=checked?'block':'none';
+document.getElementById(`n${i}`).style.display=checked?'block':'none';
+if(!checked){
+document.getElementById(`n${i}`).value='';
+document.getElementById(`n${i}`).style.height="auto";
+}
+}
+
+function generateNote(){
+
+const output=document.getElementById("outputContainer");
+output.innerHTML="";
+
+TASKS.forEach((t,i)=>{
+if(!document.getElementById(`t${i}`).checked) return;
+
+let lines=[];
+
+if(reason.value.trim()){
+lines.push(`called in regarding ${reason.value.trim()} //`);
+}
+
+lines.push(`${t.taskText} //`);
+
+if(rx.value.trim()){
+lines.push(`rx: ${rx.value.trim()} //`);
+}
+
+t.res.forEach((r,j)=>{
+if(document.getElementById(`t${i}r${j}`).checked){
+lines.push(`${r} //`);
+}
+});
+
+const extra=document.getElementById(`n${i}`).value.trim();
+if(extra) lines.push(extra);
+
+if(lines.length){
+lines[lines.length-1]=lines[lines.length-1].replace(/\s*\/\/$/,"");
+}
+
+const finalText=lines.join("\n");
+
+output.insertAdjacentHTML("beforeend",`
+<div class="outputBox">
+<div class="outputTitle">${t.name.toUpperCase()}</div>
+<textarea readonly oninput="autoExpand(this)">${finalText}</textarea>
+<div class="button-row">
+<button onclick="copyThis(this)">copy</button>
+<button onclick="finishNote()">finish</button>
+</div>
+</div>
+`);
+});
+
+}
+
+function copyThis(btn){
+const t=btn.closest('.outputBox').querySelector('textarea');
+t.select();
+document.execCommand("copy");
+}
+
+function finishNote(){
+resetForm();
+document.getElementById("outputContainer").innerHTML="";
+}
+
+function resetForm(){
+document.querySelectorAll("input,textarea").forEach(el=>{
+if(el.type==="checkbox") el.checked=false;
+else{
+el.value="";
+el.style.height="auto";
+}
+});
+document.querySelectorAll(".resGroup,.subnote").forEach(el=>el.style.display="none");
+}
+
+</script>
+
 </body>
 </html>
